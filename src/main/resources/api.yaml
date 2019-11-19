@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+  title: Unger JEE8 Sample Microservice
+  contact:
+    name: Wolfgang
+    url: www.sccbrasil.com
+    email: wolfgang.unger@sccbrasil.com
+  version: 1.0.0
+servers:
+- url: /
+  description: localhost
+  variables: {}
+tags:
+- name: Hello service
+  description: Check the app is online
+- name: Hello service
+  description: Check the app is online
+paths:
+  /unw/config/injected:
+    get:
+      operationId: getInjectedConfigValue
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Default Response.
+  /unw/config/lookup:
+    get:
+      operationId: getLookupConfigValue
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Default Response.
+  /unw/hello:
+    get:
+      tags:
+      - Hello service
+      description: Hello Rest Method
+      operationId: sayHello
+      responses:
+        200:
+          description: Hello World Rest
+  /unw/metric/increment:
+    get:
+      operationId: doIncrement
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: number
+          description: Default Response.
+  /unw/metric/timed:
+    get:
+      operationId: timedRequest
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Default Response.
+  /unw/resilience:
+    get:
+      operationId: checkTimeout
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Default Response.
+  /unw/sample:
+    get:
+      description: find sales order by id
+      operationId: findSalesOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: object
+      responses:
+        200:
+          description: Successful, returning the value
+  /unw/sample/checkversion:
+    get:
+      operationId: test
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /unw/sample/initSalesOrder:
+    get:
+      description: create sales order
+      operationId: createSalesOrder
+      responses:
+        201:
+          description: Successful, returning the value
+  /unw/sample/salesOrderByOrderNumber/{orderNumber}:
+    get:
+      description: find sales order by number
+      operationId: findSalesOrder
+      parameters:
+      - name: orderNumber
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful, returning the value
+  /unw/sample/salesOrderDetails:
+    get:
+      description: get all sales order details
+      operationId: getAllSalesOrderDetails
+      responses:
+        200:
+          description: Successful, returning the value
+  /unw/sample/salesOrderDetails/{id}:
+    get:
+      description: find sales order detail by id
+      operationId: getSalesOrderDetail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: object
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: object
+      responses:
+        200:
+          description: Successful, returning the value
+  /unw/sample/salesOrderDetailsByOrder/{orderId}:
+    get:
+      description: find sales order detail by order
+      operationId: getSalesOrderDetailsByOrder
+      parameters:
+      - name: orderId
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: object
+      responses:
+        200:
+          description: Successful, returning the value
+  /unw/sample/salesOrders:
+    get:
+      description: get all sales orders
+      operationId: getAllSalesOrders
+      responses:
+        200:
+          description: Successful, returning the value
+    post:
+      description: update sales
+      operationId: persistSalesOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        202:
+          description: Successful, returning the value
+    put:
+      description: 'update sales order '
+      operationId: mergeSalesOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        202:
+          description: Successful, returning the value
+  /unw/sample/salesOrders/{id}:
+    delete:
+      description: delete sales order
+      operationId: deleteSalesOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: object
+      responses:
+        204:
+          description: Successful, returning the value
+components:
+  schemas:
+    AbstractEntity:
+      type: object
+      properties:
+        serialVersionUID:
+          type: number
+        id:
+          type: object
+        _persistence_fetchGroup:
+          type: object
+    BusinessEntity:
+      type: object
+      properties:
+        audit:
+          type: object
+        version:
+          type: number
+        serialVersionUID:
+          type: number
+      allOf:
+      - $ref: '#/components/schemas/AbstractEntity'
+    SalesOrder:
+      properties:
+        orderNumber:
+          type: string
+        description:
+          type: string
+        details:
+          type: array
+      description: Sales Order Sample Entity
+      allOf:
+      - $ref: '#/components/schemas/BusinessEntity'
+    SalesOrderDetail:
+      properties:
+        item:
+          type: string
+        detailNumber:
+          type: integer
+        description:
+          type: string
+        order:
+          type: object
+      description: Sales Order Detail Sample Entity
+      allOf:
+      - $ref: '#/components/schemas/BusinessEntity'

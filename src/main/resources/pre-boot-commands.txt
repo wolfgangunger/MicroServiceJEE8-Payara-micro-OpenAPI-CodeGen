@@ -1,0 +1,8 @@
+
+This file is executed by Payara Micro on startup as an replaced of the asadmin commands.
+
+# Enable CORS Headers for /openapi
+set-openapi-configuration --corsHeaders=true
+
+# Disable the #badassfish HTTP header
+set configs.config.server-config.network-config.protocols.protocol.http-listener.http.server-header=false
